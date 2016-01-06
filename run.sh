@@ -7,8 +7,14 @@ LIB_PATH=/tmp/lib/*
 JAR_FILE=solution.jar
 
 ## create result folder in /tmp directory
-printf "creating result directory /tmp/ir \n"
-mkdir /tmp/ir
+printf "creating source root directory /tmp/programming-test \n"
+mkdir /tmp/programming-test
+
+printf "creating project directory /tmp/programming-test/projects \n"
+mkdir /tmp/programming-test/projects
+
+printf "creating project directory /tmp/programming-test/results \n"
+mkdir /tmp/programming-test/results
 
 declare -a repo_urls
 
@@ -20,10 +26,10 @@ let i=0
 while (( ${#repo_urls[@]} > i )); do
     IFS='/' read -a repo_url <<< "${repo_urls[i]}"
     printf "creating directory '${repo_url[3]}'\n"
-    mkdir ${repo_url[3]}
+    mkdir /tmp/programming-test/projects/${repo_url[3]}
 
     printf "changing directory to ${repo_url[3]}\n"
-    cd ${repo_url[3]}
+    cd /tmp/programming-test/projects/${repo_url[3]}
 
     printf "cloning url: ${repo_urls[i]}\n"
     git clone ${repo_urls[i]}
@@ -36,14 +42,14 @@ while (( ${#repo_urls[@]} > i )); do
     ./gradlew build
 
     printf "copying candidate program in /tmp/ir \n"
-    mkdir /tmp/ir/${repo_url[3]}
-    cp build/libs/$JAR_FILE /tmp/ir/${repo_url[3]}/
+    mkdir /tmp/programming-test/results/${repo_url[3]}
+    cp build/libs/$JAR_FILE /tmp/programming-test/results/${repo_url[3]}/
 
     printf "injecting sample inputs \n"
-    cp $INPUT_PATH /tmp/ir/${repo_url[3]}/
+    cp $INPUT_PATH /tmp/programming-test/results/${repo_url[3]}/
 
     printf "going to program directory \n"
-    cd /tmp/ir/${repo_url[3]}
+    cd /tmp/programming-test/results/${repo_url[3]}
     printf "running program ... \n"
     java -cp "$LIB_PATH" -jar $JAR_FILE
 
