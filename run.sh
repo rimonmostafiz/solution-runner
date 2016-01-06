@@ -37,7 +37,7 @@ while (( ${#repo_urls[@]} > i )); do
 
     printf "copying candidate program in /tmp/ir \n"
     mkdir /tmp/ir/${repo_url[3]}
-    cp build/lib/$JAR_FILE /tmp/ir/${repo_url[3]}/
+    cp build/libs/$JAR_FILE /tmp/ir/${repo_url[3]}/
 
     printf "injecting sample inputs \n"
     cp $INPUT_PATH /tmp/ir/${repo_url[3]}/
