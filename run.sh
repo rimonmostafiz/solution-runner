@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #constant declaration
-APPLICATION_ROOT=~/Labs/interview
+APPLICATION_ROOT=~/Labs/solution-runner
 INPUT_PATH=/tmp/sample-input
 LIB_PATH=/tmp/lib/*
-JAR_NAME=4rc.jar
+JAR_NAME=solution.jar
 
 ## create result folder in /tmp directory
 printf "creating result directory /tmp/ir \n"
