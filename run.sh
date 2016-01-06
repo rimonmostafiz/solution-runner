@@ -4,7 +4,7 @@
 APPLICATION_ROOT=~/Labs/solution-runner
 INPUT_PATH=/tmp/sample-input
 LIB_PATH=/tmp/lib/*
-JAR_NAME=solution.jar
+JAR_FILE=solution.jar
 
 ## create result folder in /tmp directory
 printf "creating result directory /tmp/ir \n"
@@ -33,11 +33,11 @@ while (( ${#repo_urls[@]} > i )); do
     cd ${project_dir[0]}
 
     printf "building project ... \n"
-    mvn clean package
+    ./gradlew build
 
     printf "copying candidate program in /tmp/ir \n"
     mkdir /tmp/ir/${repo_url[3]}
-    cp target/4rc.jar /tmp/ir/${repo_url[3]}/
+    cp build/lib/$JAR_FILE /tmp/ir/${repo_url[3]}/
 
     printf "injecting sample inputs \n"
     cp $INPUT_PATH /tmp/ir/${repo_url[3]}/
@@ -45,7 +45,7 @@ while (( ${#repo_urls[@]} > i )); do
     printf "going to program directory \n"
     cd /tmp/ir/${repo_url[3]}
     printf "running program ... \n"
-    java -cp "$LIB_PATH" -jar $JAR_NAME
+    java -cp "$LIB_PATH" -jar $JAR_FILE
 
     ## going back to root directory
     cd $APPLICATION_ROOT
