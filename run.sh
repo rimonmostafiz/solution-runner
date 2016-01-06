@@ -3,7 +3,7 @@
 #constant declaration
 APPLICATION_ROOT=~/Labs/solution-runner
 INPUT_PATH=/tmp/sample-input
-LIB_PATH=/tmp/lib/*
+CLASSPATH=/tmp/lib/real.jar:solution.jar
 JAR_FILE=solution.jar
 
 ## create result folder in /tmp directory
@@ -51,7 +51,7 @@ while (( ${#repo_urls[@]} > i )); do
     printf "going to program directory \n"
     cd /tmp/programming-test/results/${repo_url[3]}
     printf "running program ... \n"
-    java -cp "$LIB_PATH" -jar $JAR_FILE
+    java "${JVM_OPTS[@]}" -classpath "$CLASSPATH" com.tigerit.solution.Solution
 
     ## going back to root directory
     cd $APPLICATION_ROOT
