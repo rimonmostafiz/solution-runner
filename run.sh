@@ -2,7 +2,9 @@
 
 #constant declaration
 APPLICATION_ROOT=~/Labs/solution-runner
-INPUT_PATH=/tmp/sample-input
+REPORT_FILE=/tmp/programming-test/report
+DATA_INPUT_FILE=/tmp/data.input
+DATA_OUTPUT_FILE=/tmp/data.output
 CLASSPATH=/tmp/lib/real.jar:solution.jar
 JAR_FILE=solution.jar
 
@@ -41,17 +43,30 @@ while (( ${#repo_urls[@]} > i )); do
     printf "building project ... \n"
     ./gradlew build
 
-    printf "copying candidate program in /tmp/ir \n"
+    printf "copying candidate program in /tmp/programming-test/results/ \n"
     mkdir /tmp/programming-test/results/${repo_url[3]}
     cp build/libs/$JAR_FILE /tmp/programming-test/results/${repo_url[3]}/
 
-    printf "injecting sample inputs \n"
-    cp $INPUT_PATH /tmp/programming-test/results/${repo_url[3]}/
+    printf "injecting sample input file \n"
+    cp $DATA_INPUT_FILE /tmp/programming-test/results/${repo_url[3]}/
+
+    printf "injecting sample output file \n"
+    cp $DATA_OUTPUT_FILE /tmp/programming-test/results/${repo_url[3]}/
 
     printf "going to program directory \n"
     cd /tmp/programming-test/results/${repo_url[3]}
     printf "running program ... \n"
     java "${JVM_OPTS[@]}" -classpath "$CLASSPATH" com.tigerit.solution.Solution
+
+    printf "comparing applicant program result \n"
+    result=$(diff -y -W 72 $DATA_OUTPUT_FILE /tmp/programming-test/results/${repo_url[3]})
+
+    if [ $? -eq 0 ]
+    then
+            echo "${repo_url[3]}  PASSED" >> $REPORT_FILE
+    else
+            echo "${repo_url[3]}  FAILED" >> $REPORT_FILE
+    fi
 
     ## going back to root directory
     cd $APPLICATION_ROOT
