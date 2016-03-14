@@ -1,0 +1,17 @@
+.*
+!.gitignore
+,*
++*
+*.ipr
+*.iws
+*.iml
+*.tmproj
+*.class
+out
+doc
+dist
+log
+logs
+ship
+build
+target

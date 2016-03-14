@@ -1,0 +1,21 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+archivesBaseName = 'runner'
+mainClassName = 'com.tigerit.exam.SolutionRunner'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'commons-io',        name:'commons-io',          version:'2.4'
+    compile group: 'org.slf4j',         name:'slf4j-api',           version: '1.7.2'
+    compile group: 'ch.qos.logback',    name:'logback-classic',     version: '1.0.9'
+    compile group: 'ch.qos.logback',    name:'logback-core',        version: '1.0.9'
+    compile group: 'org.eclipse.jgit',  name: 'org.eclipse.jgit',   version:'4.2.0.201601211800-r'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.8'
+}
