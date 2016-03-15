@@ -85,9 +85,12 @@ public class ApplicantTask implements Runnable {
             String outputFileName = configuration.get("result.root.directory.name") + "/" + applicant.getEmail();
             SandBox sandBox = new SandBox(inputFileName, outputFileName);
             sandBox.run(solution);
+            Thread.sleep(10000);
             logger.debug("task execution completed ..");
         } catch (FileNotFoundException e) {
             logger.debug("jar file not found");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
         // verify applicant result with actual result.
