@@ -35,10 +35,18 @@ public class SolutionRunner {
         // create repo root directory, if it already exists remove it and create it again.
         String repoRootDirLocation = configuration.get("repo.root.directory.name");
         logger.debug("Repo root directory location: {}", repoRootDirLocation);
-        File directory = new File(repoRootDirLocation);
-        FileUtils.deleteDirectory(directory);
-        logger.debug("Creating repo root directory [{}]", directory.toString());
-        Files.createDirectory(Paths.get(directory.getPath()));
+        File repoDirectory = new File(repoRootDirLocation);
+        FileUtils.deleteDirectory(repoDirectory);
+        logger.debug("Creating repo root directory [{}]", repoDirectory.toString());
+        Files.createDirectory(Paths.get(repoDirectory.getPath()));
+
+        // create results root directory, if it already exists remove it and create it again.
+        String resultRootDirLocation = configuration.get("result.root.directory.name");
+        logger.debug("Result root directory location: {}", resultRootDirLocation);
+        File resultDirectory = new File(resultRootDirLocation);
+        FileUtils.deleteDirectory(resultDirectory);
+        logger.debug("Creating result root directory [{}]", resultDirectory.toString());
+        Files.createDirectory(Paths.get(resultDirectory.getPath()));
 
         // iterate all the applicants, create task for each and execute that task
         for(Applicant applicant : applicants) {
