@@ -53,6 +53,12 @@ public class SolutionRunner {
             ApplicantTask task = new ApplicantTask(applicant, configuration);
             task.run();
         }
+
+        // iterate all the applicants and print their result
+        for(Applicant applicant : applicants) {
+            logger.info("Name: [{}] -- Email: [{}] -- Result: [{}]",
+                    applicant.getName(), applicant.getEmail(), applicant.getResult());
+        }
     }
 
 }

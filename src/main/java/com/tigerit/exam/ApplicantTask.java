@@ -1,6 +1,6 @@
 package com.tigerit.exam;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
@@ -12,10 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -65,7 +61,7 @@ public class ApplicantTask implements Runnable {
             logger.debug("Running gradle build: [{}]", buildCommand);
             Runtime runtime = Runtime.getRuntime();
             runtime.exec(buildCommand);
-            Thread.sleep(10000);
+            Thread.sleep(10000); //hack
         } catch (Exception e) {
             logger.debug("build failed for repo {}", applicant.getRepo());
             applicant.setResult("build failed");
@@ -93,7 +89,22 @@ public class ApplicantTask implements Runnable {
         } catch (FileNotFoundException e) {
             logger.debug("jar file not found");
         }
-        // check result
-        // log final result
+
+        // verify applicant result with actual result.
+        try {
+            String probFileLoc = configuration.get("problem.output.file.name");
+            String resultFileLoc = configuration.get("result.root.directory.name") + "/" + applicant.getEmail();
+            String actualResult = DigestUtils.md5Hex(new FileInputStream(probFileLoc));
+            String applicantResult = DigestUtils.md5Hex(new FileInputStream(resultFileLoc));
+            if(!actualResult.equals(applicantResult)) {
+                logger.debug("incorrect result {} - {} !!!", applicant.getName(), applicant.getEmail());
+                applicant.setResult("failed");
+            } else {
+                logger.debug("correct result {} - {} !!!", applicant.getName(), applicant.getEmail());
+                applicant.setResult("passed");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
