@@ -10,6 +10,7 @@ import java.io.PrintStream;
 
 /**
  * @author Faisal Ahmed
+ * Sandboxing applicant code execution
  */
 public class SandBox {
 
