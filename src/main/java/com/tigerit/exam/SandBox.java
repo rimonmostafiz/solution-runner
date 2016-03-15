@@ -1,5 +1,8 @@
 package com.tigerit.exam;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -13,6 +16,8 @@ public class SandBox {
     private String inputFileName;
 
     private String outputFileName;
+
+    private static final Logger logger = LoggerFactory.getLogger(SandBox.class);
 
     public SandBox(String inputFileName, String outputFileName) {
         this.inputFileName = inputFileName;
@@ -28,8 +33,14 @@ public class SandBox {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        runnable.run();
-        System.setIn(stdIn);
-        System.setOut(stdOut);
+        try {
+            runnable.run();
+            System.setIn(stdIn);
+            System.setOut(stdOut);
+        } catch (Exception e) {
+            System.setIn(stdIn);
+            System.setOut(stdOut);
+            logger.debug("Exception occurred inside applicant solution");
+        }
     }
 }
