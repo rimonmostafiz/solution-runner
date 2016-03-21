@@ -42,6 +42,7 @@ public class SandBox {
             System.setIn(stdIn);
             System.setOut(stdOut);
             logger.debug("Exception occurred inside applicant solution");
+            throw new RuntimeException(e);
         }
     }
 }

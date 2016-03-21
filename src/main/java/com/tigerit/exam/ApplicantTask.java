@@ -91,6 +91,10 @@ public class ApplicantTask implements Runnable {
             logger.debug("jar file not found");
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            logger.debug("Exception in applicant code:{}", e);
+            applicant.setResult("failed");
+            return;
         }
 
         // verify applicant result with actual result.
