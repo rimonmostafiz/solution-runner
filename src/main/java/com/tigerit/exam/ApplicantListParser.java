@@ -22,11 +22,15 @@ public class ApplicantListParser {
             BufferedReader br = new BufferedReader(new FileReader(csv));
             String line; int lineNumber = 1 ;
             while ((line = br.readLine()) != null) {
-                String[] each = line.split(",");
-                if(each.length == 3) {
-                    applicants.add(new Applicant(each[0], each[1], each[2]));
+                if(!line.startsWith("#")) {
+                    String[] each = line.split(",");
+                    if(each.length == 3) {
+                        applicants.add(new Applicant(each[0], each[1], each[2]));
+                    } else {
+                        logger.error("Error parsing applicant data at line number: {}", lineNumber);
+                    }
                 } else {
-                    logger.error("Error parsing applicant data at line number: {}", lineNumber);
+                    logger.debug("Line {} Skipped", lineNumber);
                 }
                 lineNumber++;
             }
