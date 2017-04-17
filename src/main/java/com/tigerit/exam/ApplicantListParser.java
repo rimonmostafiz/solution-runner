@@ -25,7 +25,7 @@ public class ApplicantListParser {
                 if(!line.startsWith("#")) {
                     String[] each = line.split(",");
                     if(each.length == 3) {
-                        applicants.add(new Applicant(each[0], each[1], each[2]));
+                        applicants.add(new Applicant(each[0].trim(), each[1].trim(), each[2].trim()));
                     } else {
                         logger.error("Error parsing applicant data at line number: {}", lineNumber);
                     }
