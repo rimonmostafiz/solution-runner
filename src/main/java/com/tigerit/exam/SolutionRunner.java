@@ -24,23 +24,23 @@ public class SolutionRunner {
         Configuration configuration = Configuration.load(args);
         logger.debug("Configuration is loaded with {} resource.", configuration.type());
 
+        ExecutorService executor;
         Integer poolSize = configuration.getInt("application.thread-pool.size");
         if(poolSize <= 1) {
-            poolSize = 1;
+            executor = Executors.newSingleThreadExecutor();
+            logger.debug("application started with single thread executor");
             logger.debug("configure thread pool through application.thread-pool.size property");
+        } else {
+            executor = Executors.newFixedThreadPool(poolSize);
+            logger.debug("application started with thread pool size : {} ", poolSize);
         }
-        ExecutorService executor = Executors.newFixedThreadPool(poolSize);
-        logger.debug("application started with thread pool size : {} ", poolSize);
 
         // parse applicant list and store into memory
         Set<Applicant> applicants = ApplicantListParser.parse(configuration.get("applicants.file.location"));
         logger.debug("Listing all the applicants parsed from applicants.list file");
-        logger.debug(">>>>");
         for(Applicant applicant : applicants) {
-            logger.debug("Name: [{}] <> Email: [{}] <> Repo: [{}]",
-                    applicant.getName(), applicant.getEmail(), applicant.getRepo());
+            logger.debug("{} <{}> [{}]", applicant.getName(), applicant.getEmail(), applicant.getRepo());
         }
-        logger.debug("<<<<");
 
         // create repo root directory, if it already exists remove it and create it again.
         String repoRootDirLocation = configuration.get("repo.root.directory.name");
@@ -69,8 +69,7 @@ public class SolutionRunner {
 
         // iterate all the applicants and print their result
         for(Applicant applicant : applicants) {
-            logger.info("Name: [{}] -- Email: [{}] -- Result: [{}]",
-                    applicant.getName(), applicant.getEmail(), applicant.getResult());
+            logger.info("{} <{}> [{}]", applicant.getName(), applicant.getEmail(), applicant.getResult());
         }
     }
 
