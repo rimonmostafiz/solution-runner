@@ -46,6 +46,12 @@ public class Configuration {
         return properties.getProperty(key.trim());
     }
 
+    public Integer getInt(String key) {
+        String value = get(key);
+        if(value == null || value.isEmpty()) return 0;
+        return Integer.valueOf(value);
+    }
+
     public String type() {
         return type;
     }

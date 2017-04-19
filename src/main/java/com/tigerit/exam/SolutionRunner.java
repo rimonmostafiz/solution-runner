@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author Faisal Ahmed
@@ -21,6 +23,14 @@ public class SolutionRunner {
         // loading configuration.
         Configuration configuration = Configuration.load(args);
         logger.debug("Configuration is loaded with {} resource.", configuration.type());
+
+        Integer poolSize = configuration.getInt("application.thread-pool.size");
+        if(poolSize <= 1) {
+            poolSize = 1;
+            logger.debug("configure thread pool through application.thread-pool.size property");
+        }
+        ExecutorService executor = Executors.newFixedThreadPool(poolSize);
+        logger.debug("application started with thread pool size : {} ", poolSize);
 
         // parse applicant list and store into memory
         Set<Applicant> applicants = ApplicantListParser.parse(configuration.get("applicants.file.location"));
@@ -50,9 +60,12 @@ public class SolutionRunner {
 
         // iterate all the applicants, create task for each and execute that task
         for(Applicant applicant : applicants) {
-            ApplicantTask task = new ApplicantTask(applicant, configuration);
-            task.run();
+            executor.execute(new ApplicantTask(applicant, configuration));
         }
+
+        // shutdown the executor
+        executor.shutdown();
+        for (;;) { if(executor.isTerminated()) break; }
 
         // iterate all the applicants and print their result
         for(Applicant applicant : applicants) {
